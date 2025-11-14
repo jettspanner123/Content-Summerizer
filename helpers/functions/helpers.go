@@ -2,20 +2,28 @@ package functions
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/fatih/color"
 )
 
 // MARK: Global Variables
-var allowedExtensions = []string{"txt", "json"}
+var AllowedExtensions = []string{"txt", "json"}
 var AllowedOutputLengths = []string{"short", "medium", "long"}
+
+const (
+	ShortOutputLength  = 50
+	MediumOutputLength = 100
+	LongOutputLength   = 150
+)
 
 // MARK: Functions
 
-func IsExtensionAllowed(ext string) bool {
-	for _, item := range allowedExtensions {
-		if item == ext {
+func IsExtensionAllowed(fullFileName string) bool {
+	parts := strings.Split(fullFileName, ".")
+	for _, ext := range AllowedExtensions {
+		if ext == parts[len(parts)-1] {
 			return true
 		}
 	}
@@ -45,4 +53,30 @@ func IsValidOutputLength(flagValue string) bool {
 		}
 	}
 	return false
+}
+
+func DoesFileExists(filename string) bool {
+	_, err := os.Stat(filename)
+
+	if err == nil {
+		return true
+	}
+
+	if os.IsNotExist(err) {
+		return false
+	}
+
+	return false
+}
+
+func GetOutputLength(flagValue string) (int, error) {
+	switch strings.ToLower(flagValue) {
+	case "short":
+		return ShortOutputLength, nil
+	case "medium":
+		return MediumOutputLength, nil
+	case "long":
+		return LongOutputLength, nil
+	}
+	return -1, fmt.Errorf("Invalid output length provided: %s", flagValue)
 }
