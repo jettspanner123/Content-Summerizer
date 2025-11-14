@@ -2,12 +2,14 @@ package functions
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/fatih/color"
 )
 
 // MARK: Global Variables
 var allowedExtensions = []string{"txt", "json"}
+var AllowedOutputLengths = []string{"short", "medium", "long"}
 
 // MARK: Functions
 
@@ -34,4 +36,13 @@ func TerminalError(message string, wantErrorTemplate ...bool) {
 		template = "       "
 	}
 	color.Red(fmt.Sprintf("%s %s", template, message))
+}
+
+func IsValidOutputLength(flagValue string) bool {
+	for _, outputLength := range AllowedOutputLengths {
+		if strings.ToLower(flagValue) == outputLength {
+			return true
+		}
+	}
+	return false
 }
