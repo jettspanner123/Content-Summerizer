@@ -1,9 +1,11 @@
 package main
 
 import (
-	helpers "csum/helpers/functions"
 	"flag"
 	"fmt"
+
+	textFeature "csum/features/textOperatedInputFeature"
+	helpers "csum/helpers/functions"
 
 	"github.com/fatih/color"
 )
@@ -15,12 +17,14 @@ func main() {
 		inputFileName  string
 		outputFileName string
 		outputLength   string
+		textOperator   string
 	)
 
 	// MARK: Getting All The Flags For The Variables
 	flag.StringVar(&inputFileName, "input", "", "Input File Name")
 	flag.StringVar(&outputFileName, "output", "output.txt", "Output File Name")
 	flag.StringVar(&outputLength, "length", "short", "Output Length")
+	flag.StringVar(&textOperator, "text", "", "Text Operated Input")
 
 	// MARK: Defining Custom Flag Usage
 	flag.Usage = func() {
@@ -48,27 +52,27 @@ func main() {
 	flag.Parse()
 
 	// MARK: Fallback Logic
-	if inputFileName == "" {
+	if inputFileName == "" && textOperator == "" {
 		helpers.TerminalError("Input File Name cannot be blank. \nRun 'csum --help' for usage.")
 		return
 	}
 
-	if !helpers.DoesFileExists(inputFileName) {
+	if !helpers.DoesFileExists(inputFileName) && textOperator == "" {
 		helpers.TerminalError(fmt.Sprintf("Input File Name '%s' does not exist.", inputFileName))
 		return
 	}
 
-	if helpers.DoesFileExists(outputFileName) {
+	if helpers.DoesFileExists(outputFileName) && textOperator == "" {
 		helpers.TerminalError(fmt.Sprintf("Ouput File Name '%s' already exist. \nPlease change the filename using the --output flag.", outputFileName))
 		return
 	}
 
-	if !helpers.IsValidOutputLength(outputLength) {
+	if !helpers.IsValidOutputLength(outputLength) && textOperator == "" {
 		helpers.TerminalError("Invalid Output Length. \nRun 'csum --help' for usage.")
 		return
 	}
 
-	if !helpers.IsExtensionAllowed(inputFileName) {
+	if !helpers.IsExtensionAllowed(inputFileName) && textOperator == "" {
 		helpers.TerminalError("Invalid Input File Type. ")
 		return
 	}
@@ -78,4 +82,11 @@ func main() {
 		return
 	}
 
+	if textOperator != "" && inputFileName != "" {
+		helpers.TerminalError("Both text operated input and file based input can't be used together.\n")
+		color.Yellow("Either use --input or --text.")
+		return
+	}
+
+	textFeature.TextOperatedInputFeature(textOperator, outputLength)
 }
