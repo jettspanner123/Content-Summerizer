@@ -1,4 +1,4 @@
-# 🧠 ContentSummarizerCLI
+# 🧠 CSum: CLI Content Summarization Tool
 
 ![Go](https://img.shields.io/badge/Made%20with-Go-00ADD8?logo=go&logoColor=white)
 ![AI](https://img.shields.io/badge/Powered%20by-Gemini%20AI-4285F4?logo=google&logoColor=white)
@@ -61,14 +61,14 @@ setx GEMINI_API_KEY "your_api_key_here"
 
 ### 💾 Save Output to File:
 ```bash
-./summarize --input article.txt --output summary.txt
+./csum --input article.txt --output summary.txt
 ```
 
 ### 🎛️ Adjust Summary Length:
 ```bash
-./summarize --input report.txt --length short
-./summarize --input research.txt --length medium
-./summarize --input research.txt --length long
+./csum --input report.txt --length short
+./csum --input research.txt --length medium
+./csum --input research.txt --length long
 ```
 
 ### 🆘 View Help:
