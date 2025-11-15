@@ -10,7 +10,7 @@ import (
 	gemini "google.golang.org/genai"
 )
 
-func TextOperatedInputFeature(text string, outputLength string) {
+func TextOperatedInputFeature(text string, outputLength string, outputFileName *string) {
 
 	// MARK: Creating Gemini Client
 	ctx := context.Background()
@@ -34,7 +34,10 @@ func TextOperatedInputFeature(text string, outputLength string) {
 		
 		RULES TO FOLLOW:
 			- No matter what the input text is, you have to keep it in the range of %d words.
-	`, text, outputLengthT, outputLengthT,
+	`,
+		text,
+		outputLengthT,
+		outputLengthT,
 	)
 	result, err := geminiClient.Models.GenerateContent(
 		ctx, "gemini-2.5-flash", gemini.Text(systemPrompt), nil)
@@ -43,5 +46,11 @@ func TextOperatedInputFeature(text string, outputLength string) {
 		log.Fatal("Error generating content: ", err)
 	}
 
-	fmt.Println(result.Text())
+	if outputFileName != nil {
+		var fileName string = *outputFileName
+		helpers.CreateAndWriteFile(fileName, result.Text())
+	} else {
+		fmt.Println(result.Text())
+	}
+
 }

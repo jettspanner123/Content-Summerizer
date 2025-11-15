@@ -88,5 +88,20 @@ func main() {
 		return
 	}
 
-	textFeature.TextOperatedInputFeature(textOperator, outputLength)
+	// MARK: Check which feature to call.
+	var isTextOperated bool = inputFileName == "" && textOperator != ""
+
+	// MARK: Check if write to external file
+	var isWriteToExternalFile bool = isTextOperated && outputFileName != ""
+
+	if isTextOperated {
+		if isWriteToExternalFile {
+			var outputFile string = "output.txt"
+			//fmt.Println("Write to external file detected!")
+			textFeature.TextOperatedInputFeature(textOperator, outputLength, &outputFile)
+		} else {
+			//fmt.Println("Write to terminal file detected!")
+			textFeature.TextOperatedInputFeature(textOperator, outputLength, nil)
+		}
+	}
 }

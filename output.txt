@@ -1,0 +1,1 @@
+To create "Hello, World!" in .NET, you typically start a console application project. The core C# code is `Console.WriteLine("Hello, World!");`. This single line outputs the specified text directly to the console. It's the quintessential first program, demonstrating that your .NET development environment is correctly configured and ready to run .NET applications.

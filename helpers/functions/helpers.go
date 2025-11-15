@@ -2,6 +2,7 @@ package functions
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -79,4 +80,19 @@ func GetOutputLength(flagValue string) (int, error) {
 		return LongOutputLength, nil
 	}
 	return -1, fmt.Errorf("Invalid output length provided: %s", flagValue)
+}
+
+func CreateAndWriteFile(fileName string, content string) {
+	file, err := os.Create(fileName)
+
+	if err != nil {
+		log.Fatal("Cannot create file", err)
+	}
+
+	defer file.Close()
+
+	_, err = file.WriteString(content)
+	if err != nil {
+		log.Fatal("Cannot write to file", err)
+	}
 }
