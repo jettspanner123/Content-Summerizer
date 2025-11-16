@@ -1,4 +1,4 @@
-# 🧠 CSum: CLI Content Summarization Tool
+# 🧠 CSum: CLI AI Toolchain 
 
 ![Go](https://img.shields.io/badge/Made%20with-Go-00ADD8?logo=go&logoColor=white)
 ![AI](https://img.shields.io/badge/Powered%20by-Gemini%20AI-4285F4?logo=google&logoColor=white)
