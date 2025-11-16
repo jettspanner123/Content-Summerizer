@@ -13,6 +13,7 @@ import (
 // MARK: Global Variables
 var AllowedExtensions = []string{"txt", "json"}
 var AllowedOutputLengths = []string{"short", "medium", "long"}
+var AllowedStructures = []string{"javascript", "typescript", "java", "python", "cpp", "json", "text"}
 
 const (
 	ShortOutputLength  = 25
@@ -96,6 +97,15 @@ func CreateAndWriteFile(fileName string, content string) {
 	if err != nil {
 		log.Fatal("Cannot write to file", err)
 	}
+}
+
+func IsValidStructure(structure string) (bool, error) {
+	for _, str := range AllowedStructures {
+		if strings.ToLower(structure) == str {
+			return true, nil
+		}
+	}
+	return false, fmt.Errorf("cannot validate structure: %s", structure)
 }
 
 func Spinner(done chan bool) {

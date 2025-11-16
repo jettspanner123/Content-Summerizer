@@ -18,6 +18,7 @@ func main() {
 		outputFileName string
 		outputLength   string
 		textOperator   string
+		structure      string
 	)
 
 	loading := make(chan bool)
@@ -27,6 +28,7 @@ func main() {
 	flag.StringVar(&outputFileName, "output", "", "Output File Name")
 	flag.StringVar(&outputLength, "length", "short", "Output Length")
 	flag.StringVar(&textOperator, "text", "", "Text Operated Input")
+	flag.StringVar(&structure, "struct", "text", "Text Operated Input")
 
 	// MARK: Defining Custom Flag Usage
 	flag.Usage = func() {
@@ -69,9 +71,9 @@ func main() {
 		var isFileOutput bool = outputFileName != ""
 
 		if isFileOutput {
-			textOperatedInputFeature.TextOperatedInputFeature(textOperator, outputLength, &outputFileName)
+			textOperatedInputFeature.TextOperatedInputFeature(textOperator, outputLength, &outputFileName, structure)
 		} else {
-			textOperatedInputFeature.TextOperatedInputFeature(textOperator, outputLength, nil)
+			textOperatedInputFeature.TextOperatedInputFeature(textOperator, outputLength, nil, structure)
 		}
 	} else {
 
