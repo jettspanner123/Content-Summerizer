@@ -13,7 +13,7 @@ import (
 // MARK: Global Variables
 var AllowedExtensions = []string{"txt", "json"}
 var AllowedOutputLengths = []string{"short", "medium", "long"}
-var AllowedStructures = []string{"javascript", "typescript", "java", "python", "cpp", "json", "text"}
+var AllowedStructures = []string{"javascript", "typescript", "java", "python", "cpp", "json", "text", "c", "bash"}
 
 const (
 	ShortOutputLength  = 25
