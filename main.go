@@ -1,11 +1,11 @@
 package main
 
 import (
+	helpers "csum/helpers/functions"
 	"flag"
 	"fmt"
 
-	textFeature "csum/features/textOperatedInputFeature"
-	helpers "csum/helpers/functions"
+	textOperatedInputFeature "csum/features/textOperatedInputFeature"
 
 	"github.com/fatih/color"
 )
@@ -20,9 +20,11 @@ func main() {
 		textOperator   string
 	)
 
+	loading := make(chan bool)
+
 	// MARK: Getting All The Flags For The Variables
 	flag.StringVar(&inputFileName, "input", "", "Input File Name")
-	flag.StringVar(&outputFileName, "output", "output.txt", "Output File Name")
+	flag.StringVar(&outputFileName, "output", "", "Output File Name")
 	flag.StringVar(&outputLength, "length", "short", "Output Length")
 	flag.StringVar(&textOperator, "text", "", "Text Operated Input")
 
@@ -46,62 +48,35 @@ func main() {
 		color.Yellow("    Output Length Options:")
 		color.Yellow("        short  = 50 words")
 		color.Yellow("        medium = 100 words")
-		color.Yellow("        long   = 150 words")
+		color.Yellow("        long   = 150 words\n\n")
+
+		fmt.Println("    csum --text 'Hello World in C++'")
+		color.Green("    This will answer the text in the terminal itself.\n\n")
+
+		fmt.Println("    csum --text 'Hello World in C++' --output output.txt")
+		color.Green("    This will create a file named 'output.txt' with the response.")
 	}
 	// MARK: Parsing Flags
 	flag.Parse()
 
-	// MARK: Fallback Logic
-	if inputFileName == "" && textOperator == "" {
-		helpers.TerminalError("Input File Name cannot be blank. \nRun 'csum --help' for usage.")
-		return
-	}
+	// MARK: Validation Logic
 
-	if !helpers.DoesFileExists(inputFileName) && textOperator == "" {
-		helpers.TerminalError(fmt.Sprintf("Input File Name '%s' does not exist.", inputFileName))
-		return
-	}
+	var isTextInput bool = inputFileName == "" && textOperator != ""
 
-	if helpers.DoesFileExists(outputFileName) && textOperator == "" {
-		helpers.TerminalError(fmt.Sprintf("Ouput File Name '%s' already exist. \nPlease change the filename using the --output flag.", outputFileName))
-		return
-	}
+	go helpers.Spinner(loading)
 
-	if !helpers.IsValidOutputLength(outputLength) && textOperator == "" {
-		helpers.TerminalError("Invalid Output Length. \nRun 'csum --help' for usage.")
-		return
-	}
+	if isTextInput {
+		var isFileOutput bool = outputFileName != ""
 
-	if !helpers.IsExtensionAllowed(inputFileName) && textOperator == "" {
-		helpers.TerminalError("Invalid Input File Type. ")
-		return
-	}
-
-	if !helpers.IsExtensionAllowed(outputFileName) {
-		helpers.TerminalError("Invalid Output File Type. ")
-		return
-	}
-
-	if textOperator != "" && inputFileName != "" {
-		helpers.TerminalError("Both text operated input and file based input can't be used together.\n")
-		color.Yellow("Either use --input or --text.")
-		return
-	}
-
-	// MARK: Check which feature to call.
-	var isTextOperated bool = inputFileName == "" && textOperator != ""
-
-	// MARK: Check if write to external file
-	var isWriteToExternalFile bool = isTextOperated && outputFileName != ""
-
-	if isTextOperated {
-		if isWriteToExternalFile {
-			var outputFile string = "output.txt"
-			//fmt.Println("Write to external file detected!")
-			textFeature.TextOperatedInputFeature(textOperator, outputLength, &outputFile)
+		if isFileOutput {
+			textOperatedInputFeature.TextOperatedInputFeature(textOperator, outputLength, &outputFileName)
 		} else {
-			//fmt.Println("Write to terminal file detected!")
-			textFeature.TextOperatedInputFeature(textOperator, outputLength, nil)
+			textOperatedInputFeature.TextOperatedInputFeature(textOperator, outputLength, nil)
 		}
+	} else {
+
 	}
+
+	loading <- true
+
 }

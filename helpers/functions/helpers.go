@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 )
@@ -14,9 +15,9 @@ var AllowedExtensions = []string{"txt", "json"}
 var AllowedOutputLengths = []string{"short", "medium", "long"}
 
 const (
-	ShortOutputLength  = 50
-	MediumOutputLength = 100
-	LongOutputLength   = 150
+	ShortOutputLength  = 25
+	MediumOutputLength = 50
+	LongOutputLength   = 100
 )
 
 // MARK: Functions
@@ -94,5 +95,21 @@ func CreateAndWriteFile(fileName string, content string) {
 	_, err = file.WriteString(content)
 	if err != nil {
 		log.Fatal("Cannot write to file", err)
+	}
+}
+
+func Spinner(done chan bool) {
+	frames := []rune{'|', '/', '-', '\\'}
+	i := 0
+
+	for {
+		select {
+		case <-done:
+			return // stop spinner
+		default:
+			fmt.Printf("\rLoading... %c", frames[i%len(frames)])
+			i++
+			time.Sleep(100 * time.Millisecond)
+		}
 	}
 }
